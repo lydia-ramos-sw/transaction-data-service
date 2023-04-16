@@ -1,0 +1,61 @@
+package com.smallworldfs.transactiondataservice.transaction.service;
+
+import com.smallworldfs.error.exception.ApplicationException;
+import com.smallworldfs.transactiondataservice.transaction.db.entity.Transaction;
+import com.smallworldfs.transactiondataservice.transaction.db.mapper.TransactionMapper;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static com.smallworldfs.error.issue.DefaultIssueType.NOT_FOUND;
+import static com.smallworldfs.transactiondataservice.transaction.Transactions.newTransaction;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+public class TransactionServiceTest {
+
+    @Mock
+    private TransactionMapper mapper;
+    @InjectMocks
+    private TransactionService service;
+
+    @Nested
+    class GetTransaction {
+
+        @Test
+        void throws_exception_when_transaction_does_not_exist() {
+            whenTransactionIsQueriedReturnEmpty(55);
+
+            ApplicationException exception = assertThrows(ApplicationException.class, () -> service.getTransaction(55));
+
+            Assertions.assertThat(exception)
+                    .hasMessage("Transaction with id '55' could not be found")
+                    .returns(NOT_FOUND, e -> e.getIssue().getType());
+        }
+
+        @Test
+        void returns_transaction_data_when_transaction_exists() {
+            whenTransactionIsQueriedThenReturn(1, newTransaction());
+
+            Transaction transaction = service.getTransaction(1);
+
+            Assertions.assertThat(transaction).isEqualTo(newTransaction());
+        }
+
+        private void whenTransactionIsQueriedReturnEmpty(int id) {
+            when(mapper.findById(id)).thenReturn(Optional.empty());
+        }
+
+        private  void whenTransactionIsQueriedThenReturn(int id, Transaction transaction) {
+            when(mapper.findById(id)).thenReturn(Optional.ofNullable(transaction));
+        }
+    }
+}
