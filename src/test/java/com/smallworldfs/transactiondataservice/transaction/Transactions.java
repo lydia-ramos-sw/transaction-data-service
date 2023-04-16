@@ -3,8 +3,8 @@ package com.smallworldfs.transactiondataservice.transaction;
 import com.smallworldfs.transactiondataservice.transaction.db.entity.Transaction;
 import com.smallworldfs.transactiondataservice.transaction.db.entity.TransactionStatus;
 
-public class Transactions{
-    public static Transaction newTransaction(){
+public class Transactions {
+    public static Transaction newTransaction() {
         return Transaction.builder()
                 .transactionId(1)
                 .sendingPrincipal(100.0)

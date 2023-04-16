@@ -1,8 +1,14 @@
 package com.smallworldfs.transactiondataservice.transaction.service;
 
+import static com.smallworldfs.error.issue.DefaultIssueType.NOT_FOUND;
+import static com.smallworldfs.transactiondataservice.transaction.Transactions.newTransaction;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.smallworldfs.error.exception.ApplicationException;
 import com.smallworldfs.transactiondataservice.transaction.db.entity.Transaction;
 import com.smallworldfs.transactiondataservice.transaction.db.mapper.TransactionMapper;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -11,13 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
-import static com.smallworldfs.error.issue.DefaultIssueType.NOT_FOUND;
-import static com.smallworldfs.transactiondataservice.transaction.Transactions.newTransaction;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class TransactionServiceTest {

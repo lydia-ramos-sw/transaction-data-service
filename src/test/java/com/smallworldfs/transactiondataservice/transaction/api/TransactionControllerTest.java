@@ -1,7 +1,13 @@
 package com.smallworldfs.transactiondataservice.transaction.api;
 
+import static com.smallworldfs.starter.servicetest.error.ErrorDtoResultMatcher.errorDto;
+import static com.smallworldfs.transactiondataservice.transaction.Transactions.newTransaction;
+import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_NOT_FOUND;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.smallworldfs.transactiondataservice.transaction.db.entity.Transaction;
-import com.smallworldfs.transactiondataservice.transaction.db.entity.TransactionStatus;
 import com.smallworldfs.transactiondataservice.transaction.service.TransactionService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Nested;
@@ -13,17 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.validation.constraints.NotNull;
-
-import static com.smallworldfs.starter.servicetest.error.ErrorDtoResultMatcher.errorDto;
-import static com.smallworldfs.transactiondataservice.transaction.Transactions.newTransaction;
-import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_NOT_FOUND;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = TransactionController.class)
-public class TransactionControllerTest{
+public class TransactionControllerTest {
 
     @MockBean
     private TransactionService service;
@@ -63,16 +61,15 @@ public class TransactionControllerTest{
         private void whenTransactionIsQueriedThenReturnTransaction(int id, Transaction transaction) {
             when(service.getTransaction(id)).thenReturn(transaction);
         }
+
         private void whenTransactionIsQueriedThenThrowNotFound(int id) {
-                when(service.getTransaction(id))
-                        .thenThrow(TRANSACTION_NOT_FOUND.withParameters(id).asException());
+            when(service.getTransaction(id)).thenThrow(TRANSACTION_NOT_FOUND.withParameters(id).asException());
         }
 
         private ResultActions getTransaction(int id) throws Exception {
             return mockMvc.perform(MockMvcRequestBuilders.get("/transactions/{id}", id));
         }
-     }
-
+    }
 
 
 }

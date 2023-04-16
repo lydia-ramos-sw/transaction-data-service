@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum TransactionIssue implements Issue {
 
-    TRANSACTION_NOT_FOUND("Transaction with id '{0}' could not be found"
-            , DefaultIssueType.NOT_FOUND);
+    TRANSACTION_NOT_FOUND("Transaction with id '{0}' could not be found",
+            DefaultIssueType.NOT_FOUND);
 
     private final String messageTemplate;
     private final IssueType type;

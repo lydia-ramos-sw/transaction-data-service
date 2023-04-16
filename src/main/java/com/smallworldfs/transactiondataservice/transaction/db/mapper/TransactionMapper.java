@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface TransactionMapper{
+public interface TransactionMapper {
 
     Optional<Transaction> findById(int id);
 }

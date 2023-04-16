@@ -7,11 +7,12 @@ import com.smallworldfs.transactiondataservice.transaction.db.mapper.Transaction
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class TransactionService{
+public class TransactionService {
 
     private final TransactionMapper mapper;
 
     public Transaction getTransaction(int id) {
-       return mapper.findById(id).orElseThrow(() -> TRANSACTION_NOT_FOUND.withParameters(id).asException());
+        return mapper.findById(id)
+                .orElseThrow(() -> TRANSACTION_NOT_FOUND.withParameters(id).asException());
     }
 }
