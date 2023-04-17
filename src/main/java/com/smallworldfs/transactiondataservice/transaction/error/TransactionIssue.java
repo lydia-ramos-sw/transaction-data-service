@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 public enum TransactionIssue implements Issue {
 
     TRANSACTION_NOT_FOUND("Transaction with id '{0}' could not be found",
-            DefaultIssueType.NOT_FOUND);
+            DefaultIssueType.NOT_FOUND),
+    TRANSACTION_ALREADY_EXISTENT("Transaction with id '{0}' already exists in the system",
+            DefaultIssueType.REQUEST_ERROR);
 
     private final String messageTemplate;
     private final IssueType type;

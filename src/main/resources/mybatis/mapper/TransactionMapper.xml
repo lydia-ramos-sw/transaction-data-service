@@ -29,4 +29,35 @@
         FROM transaction.transaction
         where id = #{id}
     </select>
+
+    <insert id="insertTransaction" parameterType="transaction">
+        insert into transaction.transaction (id,
+                                 sending_principal,
+                                 payout_principal,
+                                 fees,
+                                 commission,
+                                 agent_commission,
+                                 sender_id,
+                                 beneficiary_id,
+                                 status)
+        values (#{id},#{sending_principal},#{payout_principal},#{fees},#{commission},#{agent_commission},#{sender_id},#{beneficiary_id},#{status})
+    </insert>
+
+    <update id="updateTransaction" parameterType="transaction" >
+        update transaction.transaction set
+                          sending_principal = #{sending_principal},
+                          payout_principal = #{payout_principal},
+                          fees = #{fees},
+                          commission = #{commission},
+                          agent_commission = #{agent_commission},
+                          sender_id = #{sender_id},
+                          beneficiary_id = #{beneficiary_id},
+                          status = #{status}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTransaction">
+        delete from transaction.transaction where id = #{id}
+    </delete>
+
 </mapper>

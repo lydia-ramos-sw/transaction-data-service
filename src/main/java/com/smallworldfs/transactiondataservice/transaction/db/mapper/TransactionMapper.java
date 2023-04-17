@@ -8,4 +8,10 @@ import org.apache.ibatis.annotations.Mapper;
 public interface TransactionMapper {
 
     Optional<Transaction> findById(int id);
+
+    void insertTransaction(Transaction transaction);
+
+    void deleteTransaction(int id);
+
+    void updateTransaction(Transaction transaction);
 }
