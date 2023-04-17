@@ -26,6 +26,7 @@ public class TransactionController {
         //return null;
     }
 
+    /*
     @PostMapping
     public void registerNewTransaction(@RequestBody Transaction transaction) {
         service.addNewTransaction(transaction);
@@ -36,9 +37,11 @@ public class TransactionController {
         service.deleteTransaction(id);
     }
 
-    @PutMapping(path = "{id}")
+    @PutMapping(path = "{id}") // revisar y comparar con el amigosCode
     public void updateTransaction(@PathVariable("id") int id,
                               @RequestParam(required = false) Double sendingPrincipal) {
         service.updateTransaction(id, sendingPrincipal);
     }
+    */
+
 }

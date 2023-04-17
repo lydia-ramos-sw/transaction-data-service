@@ -30,7 +30,7 @@
         where id = #{id}
     </select>
 
-    <insert id="insertTransaction" parameterType="transaction">
+    <!--insert id="insertTransaction" parameterType="transaction">
         insert into transaction.transaction (id,
                                  sending_principal,
                                  payout_principal,
@@ -58,6 +58,6 @@
 
     <delete id="deleteTransaction">
         delete from transaction.transaction where id = #{id}
-    </delete>
+    </delete-->
 
 </mapper>
