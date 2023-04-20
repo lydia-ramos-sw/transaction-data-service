@@ -30,8 +30,11 @@
         where id = #{id}
     </select>
 
-    <!--insert id="insertTransaction" parameterType="transaction">
-        insert into transaction.transaction (id,
+    <insert id="insertTransaction"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            parameterType="com.smallworldfs.transactiondataservice.transaction.db.entity.Transaction">
+        insert into transaction.transaction (
                                  sending_principal,
                                  payout_principal,
                                  fees,
@@ -40,10 +43,10 @@
                                  sender_id,
                                  beneficiary_id,
                                  status)
-        values (#{id},#{sending_principal},#{payout_principal},#{fees},#{commission},#{agent_commission},#{sender_id},#{beneficiary_id},#{status})
+        values (#{sending_principal},#{payout_principal},#{fees},#{commission},#{agent_commission},#{sender_id},#{beneficiary_id},#{status})
     </insert>
 
-    <update id="updateTransaction" parameterType="transaction" >
+    <!--update id="updateTransaction" parameterType="transaction" >
         update transaction.transaction set
                           sending_principal = #{sending_principal},
                           payout_principal = #{payout_principal},
