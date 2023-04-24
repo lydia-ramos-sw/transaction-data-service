@@ -2,6 +2,7 @@ package com.smallworldfs.transactiondataservice.transaction.api;
 
 import static com.smallworldfs.starter.servicetest.error.ErrorDtoResultMatcher.errorDto;
 import static com.smallworldfs.transactiondataservice.transaction.Transactions.newTransaction;
+import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_COULD_NOT_BE_PAID;
 import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_NOT_FOUND;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -85,6 +86,23 @@ public class TransactionControllerTest {
                     .andExpect(status().isNoContent());
         }
 
+        @Test
+        void returns_void_when_pay_it() throws Exception {
+            whenTransactionIsPaidThenReturn(1);
+            payoutTransaction(1)
+                    .andExpect(status().isNoContent());
+        }
+
+        @Test
+        void returns_cannot_be_paid_when_transaction_cannot_be_paid() throws Exception {
+            whenTransactionIsPaidThenThrowCannotBePaid(1);
+
+            payoutTransaction(1)
+                    .andExpect(errorDto()
+                            .hasMessage("Transaction with id '1' could not be paid")
+                            .hasCode("TRANSACTION_COULD_NOT_BE_PAID"));
+        }
+
         private void whenTransactionIsQueriedThenReturnTransaction(int id, Transaction transaction) {
             when(service.getTransaction(id)).thenReturn(transaction);
         }
@@ -101,6 +119,15 @@ public class TransactionControllerTest {
             when(service.updateTransaction(id, transaction)).thenReturn(1);
         }
 
+        private void whenTransactionIsPaidThenReturn(int id) {
+            Mockito.doNothing().when(service).payoutTransaction(id);
+        }
+
+        private void whenTransactionIsPaidThenThrowCannotBePaid(int id) {
+            Mockito.doThrow(TRANSACTION_COULD_NOT_BE_PAID.withParameters(id).asException()).
+                    when(service).payoutTransaction(id);
+        }
+
         private ResultActions getTransaction(int id) throws Exception {
             return mockMvc.perform(MockMvcRequestBuilders.get("/transactions/{id}", id));
         }
@@ -115,6 +142,12 @@ public class TransactionControllerTest {
         private ResultActions updateTransaction(int id, Transaction transaction) throws Exception {
             return mockMvc.perform(MockMvcRequestBuilders.put("/transactions/{id}", id)
                     .content(new Gson().toJson(transaction))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON));
+        }
+
+        private ResultActions payoutTransaction(int id) throws Exception {
+            return mockMvc.perform(MockMvcRequestBuilders.post("/transactions/{id}/payout", id)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON));
         }

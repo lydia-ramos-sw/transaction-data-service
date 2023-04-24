@@ -16,6 +16,8 @@ public enum TransactionIssue implements Issue {
     TRANSACTION_COULD_NOT_BE_CREATED("Transaction could not be created",
             DefaultIssueType.INTERNAL_ERROR),
     TRANSACTION_COULD_NOT_BE_UPDATED("Transaction with id '{0}' could not be updated",
+            DefaultIssueType.INTERNAL_ERROR),
+    TRANSACTION_COULD_NOT_BE_PAID("Transaction with id '{0}' could not be paid",
             DefaultIssueType.INTERNAL_ERROR);
 
     private final String messageTemplate;

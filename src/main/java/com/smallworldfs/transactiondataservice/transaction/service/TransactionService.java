@@ -1,6 +1,7 @@
 package com.smallworldfs.transactiondataservice.transaction.service;
 
 import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_COULD_NOT_BE_CREATED;
+import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_COULD_NOT_BE_PAID;
 import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_COULD_NOT_BE_UPDATED;
 import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_NOT_FOUND;
 
@@ -32,5 +33,9 @@ public class TransactionService {
             throw TRANSACTION_COULD_NOT_BE_UPDATED.withParameters(id).asException();
         }
         return result;
+    }
+
+    public void payoutTransaction(Integer id) {
+        throw TRANSACTION_COULD_NOT_BE_PAID.withParameters(id).asException();
     }
 }

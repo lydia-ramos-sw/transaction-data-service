@@ -31,10 +31,15 @@ public class TransactionController {
         return service.createTransaction(transaction);
     }
 
+    @PostMapping("/{id}/payout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void payoutTransaction(@PathVariable Integer id) {
+        service.payoutTransaction(id);
+    }
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateTransaction(@PathVariable Integer id, @RequestBody Transaction transaction) {
         service.updateTransaction(id, transaction);
     }
-
 }
