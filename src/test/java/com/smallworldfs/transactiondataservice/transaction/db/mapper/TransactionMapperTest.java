@@ -4,15 +4,15 @@ import static com.smallworldfs.transactiondataservice.transaction.Transactions.n
 import static com.smallworldfs.transactiondataservice.transaction.Transactions.newTransactionNoId;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.smallworldfs.starter.relationaldbtest.RelationalDbTest;
-import com.smallworldfs.transactiondataservice.transaction.Transactions;
-import com.smallworldfs.transactiondataservice.transaction.db.entity.Transaction;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.smallworldfs.starter.relationaldbtest.RelationalDbTest;
+import com.smallworldfs.transactiondataservice.transaction.db.entity.Transaction;
 
 
 @RelationalDbTest(classes = TransactionMapper.class, additionalMigrationLocations = "db/data")

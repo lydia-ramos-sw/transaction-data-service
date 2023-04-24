@@ -80,7 +80,7 @@ public class TransactionControllerTest {
 
         @Test
         void returns_void_when_update_it() throws Exception {
-            whenTransactionIsUpdatedThenReturnVoid(1, newTransaction());
+            whenTransactionIsUpdatedThenReturn(1, newTransaction());
             updateTransaction(1, newTransaction())
                     .andExpect(status().isNoContent());
         }
@@ -97,8 +97,8 @@ public class TransactionControllerTest {
             when(service.createTransaction(transaction)).thenReturn(transaction);
         }
 
-        private void whenTransactionIsUpdatedThenReturnVoid(int id, Transaction transaction) {
-            Mockito.doNothing().when(service).updateTransaction(id, transaction);
+        private void whenTransactionIsUpdatedThenReturn(int id, Transaction transaction) {
+            when(service.updateTransaction(id, transaction)).thenReturn(1);
         }
 
         private ResultActions getTransaction(int id) throws Exception {

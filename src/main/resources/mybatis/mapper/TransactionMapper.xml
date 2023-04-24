@@ -30,7 +30,7 @@
         where id = #{id}
     </select>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" useGeneratedKeys="true">
         INSERT INTO transaction.transaction(sending_principal, payout_principal, fees,
                                 commission, agent_commission, sender_id, beneficiary_id,
                                 status)

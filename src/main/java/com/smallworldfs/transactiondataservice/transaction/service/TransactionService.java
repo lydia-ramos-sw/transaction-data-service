@@ -21,7 +21,7 @@ public class TransactionService {
     public Transaction createTransaction(Transaction transaction) {
         Integer result = mapper.insert(transaction);
         if (result == null || result.intValue() < 1) {
-          throw TRANSACTION_COULD_NOT_BE_CREATED.asException();
+            throw TRANSACTION_COULD_NOT_BE_CREATED.asException();
         }
         return transaction;
     }
