@@ -19,12 +19,18 @@ public class TransactionService {
     }
 
     public Transaction createTransaction(Transaction transaction) {
-        return mapper.insert(transaction)
-                .orElseThrow(() -> TRANSACTION_COULD_NOT_BE_CREATED.asException());
+        Integer result = mapper.insert(transaction);
+        if (result == null || result.intValue() < 1) {
+          throw TRANSACTION_COULD_NOT_BE_CREATED.asException();
+        }
+        return transaction;
     }
 
-    public void updateTransaction(int id, Transaction transaction) {
-        mapper.update(id, transaction)
-                .orElseThrow(() -> TRANSACTION_COULD_NOT_BE_UPDATED.withParameters(id).asException());
+    public Integer updateTransaction(int id, Transaction transaction) {
+        Integer result = mapper.update(id, transaction);
+        if (result == null || result.intValue() < 1) {
+            throw TRANSACTION_COULD_NOT_BE_UPDATED.withParameters(id).asException();
+        }
+        return result;
     }
 }

@@ -55,7 +55,7 @@ public class TransactionServiceTest {
         @Test
         void throws_exception_when_transaction_cannot_be_created() {
             Transaction newTransaction = newTransaction();
-            whenTransactionIsCreatedThenReturnEmpty(newTransaction);
+            whenTransactionIsCreatedThenReturnZero(newTransaction);
 
             ApplicationException exception = assertThrows(ApplicationException.class, () -> service.createTransaction(newTransaction));
 
@@ -65,25 +65,35 @@ public class TransactionServiceTest {
         }
 
         @Test
-        void returns_transaction_data_when_creating_transaction() {
+        void returns_transaction_count_when_creating_transaction() {
             Transaction newTransaction = newTransaction();
             whenTransactionIsCreatedThenReturn(newTransaction());
 
             Transaction transaction = service.createTransaction(newTransaction);
 
-            Assertions.assertThat(transaction).isEqualTo(newTransaction());
+            Assertions.assertThat(transaction).isEqualTo(newTransaction);
         }
 
         @Test
         void throws_exception_when_transaction_cannot_be_updated() {
             Transaction newTransaction = newTransaction();
-            whenTransactionIsUpdatedThenReturnEmpty(1, newTransaction());
+            whenTransactionIsUpdatedThenReturnZero(1, newTransaction());
 
             ApplicationException exception = assertThrows(ApplicationException.class, () -> service.updateTransaction(1, newTransaction));
 
             Assertions.assertThat(exception)
                     .hasMessage("Transaction with id '1' could not be updated")
                     .returns(INTERNAL_ERROR, e -> e.getIssue().getType());
+        }
+
+        @Test
+        void returns_transaction_count_when_updating_transaction() {
+            Transaction newTransaction = newTransaction();
+            whenTransactionIsUpdatedThenReturn(1, newTransaction);
+
+            Integer result = service.updateTransaction(1, newTransaction);
+
+            Assertions.assertThat(result.intValue()).isEqualTo(1);
         }
 
         private void whenTransactionIsQueriedReturnEmpty(int id) {
@@ -94,16 +104,20 @@ public class TransactionServiceTest {
             when(mapper.findById(id)).thenReturn(Optional.ofNullable(transaction));
         }
 
-        private void whenTransactionIsCreatedThenReturnEmpty(Transaction transaction) {
-            when(mapper.insert(transaction)).thenReturn(Optional.empty());
+        private void whenTransactionIsCreatedThenReturnZero(Transaction transaction) {
+            when(mapper.insert(transaction)).thenReturn(0);
         }
 
-        private  void whenTransactionIsCreatedThenReturn(Transaction transaction) {
-            when(mapper.insert(transaction)).thenReturn(Optional.ofNullable(transaction));
+        private void whenTransactionIsCreatedThenReturn(Transaction transaction) {
+            when(mapper.insert(transaction)).thenReturn(1);
         }
 
-        private void whenTransactionIsUpdatedThenReturnEmpty(int id, Transaction transaction) {
-            when(mapper.update(id, transaction)).thenReturn(Optional.empty());
+        private void whenTransactionIsUpdatedThenReturnZero(int id, Transaction transaction) {
+            when(mapper.update(id, transaction)).thenReturn(0);
+        }
+
+        private void whenTransactionIsUpdatedThenReturn(int id, Transaction transaction) {
+            when(mapper.update(id, transaction)).thenReturn(1);
         }
     }
 }

@@ -1,6 +1,6 @@
 CREATE SCHEMA transaction;
 CREATE TABLE transaction.transaction (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     sending_principal NUMERIC NOT NULL,
     payout_principal NUMERIC NOT NULL,
     fees NUMERIC NOT NULL,
