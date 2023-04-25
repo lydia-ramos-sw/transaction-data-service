@@ -38,12 +38,13 @@ public class TransactionMapperTest {
 
         }
 
-        /* @Test
+        @Test
         void returns_transaction_data_when_transaction_create() {
             Transaction newTransaction = newTransactionNoId();
-            Integer result = mapper.insert(newTransaction);
-            Assertions.assertThat(result.intValue()).isEqualTo(1);
-        }*/
+            mapper.insert(newTransaction);
+            // Optional<Transaction> transaction = mapper.findById(2);
+            Assertions.assertThat(newTransaction.getTransactionId()).isEqualTo(2);
+        }
 
         @Test
         void returns_transaction_data_when_transaction_update() {

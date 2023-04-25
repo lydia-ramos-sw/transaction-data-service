@@ -3,6 +3,7 @@ package com.smallworldfs.transactiondataservice.transaction.service;
 import static com.smallworldfs.error.issue.DefaultIssueType.INTERNAL_ERROR;
 import static com.smallworldfs.error.issue.DefaultIssueType.NOT_FOUND;
 import static com.smallworldfs.transactiondataservice.transaction.Transactions.newTransaction;
+import static com.smallworldfs.transactiondataservice.transaction.Transactions.newTransactionNoId;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.smallworldfs.error.exception.ApplicationException;
@@ -53,25 +55,15 @@ public class TransactionServiceTest {
         }
 
         @Test
-        void throws_exception_when_transaction_cannot_be_created() {
+        void when_create_Transaction_Id_Is_2() {
             Transaction newTransaction = newTransaction();
-            whenTransactionIsCreatedThenReturnZero(newTransaction);
+            Transaction expectedTransaction = newTransaction();
+            expectedTransaction.setTransactionId(2);
+            whenTransactionIsCreatedThenReturnTransaction(newTransaction);
 
-            ApplicationException exception = assertThrows(ApplicationException.class, () -> service.createTransaction(newTransaction));
+            service.createTransaction(newTransaction);
 
-            Assertions.assertThat(exception)
-                    .hasMessage("Transaction could not be created")
-                    .returns(INTERNAL_ERROR, e -> e.getIssue().getType());
-        }
-
-        @Test
-        void returns_transaction_count_when_creating_transaction() {
-            Transaction newTransaction = newTransaction();
-            whenTransactionIsCreatedThenReturn(newTransaction());
-
-            Transaction transaction = service.createTransaction(newTransaction);
-
-            Assertions.assertThat(transaction).isEqualTo(newTransaction);
+            Assertions.assertThat(expectedTransaction).isEqualTo(newTransaction);
         }
 
         @Test
@@ -104,12 +96,11 @@ public class TransactionServiceTest {
             when(mapper.findById(id)).thenReturn(Optional.ofNullable(transaction));
         }
 
-        private void whenTransactionIsCreatedThenReturnZero(Transaction transaction) {
-            when(mapper.insert(transaction)).thenReturn(0);
-        }
-
-        private void whenTransactionIsCreatedThenReturn(Transaction transaction) {
-            when(mapper.insert(transaction)).thenReturn(1);
+        private void whenTransactionIsCreatedThenReturnTransaction(Transaction transaction) {
+            Mockito.doAnswer((t)-> {
+                transaction.setTransactionId(2);
+                return transaction;
+            }).when(mapper).insert(transaction);
         }
 
         private void whenTransactionIsUpdatedThenReturnZero(int id, Transaction transaction) {

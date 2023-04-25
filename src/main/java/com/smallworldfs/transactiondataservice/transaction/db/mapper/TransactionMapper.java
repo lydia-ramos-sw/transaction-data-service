@@ -20,7 +20,7 @@ public interface TransactionMapper {
      * " #{transaction.agentCommission}, #{transaction.senderId}, " +
      * "#{transaction.beneficiaryId}, #{transaction.status})")
      */
-    Integer insert(Transaction transaction);
+    void insert(Transaction transaction);
 
     @Update("Update transaction.transaction set sending_principal=#{transaction.sendingPrincipal}, "
             + " payout_principal=#{transaction.payoutPrincipal}, " +
