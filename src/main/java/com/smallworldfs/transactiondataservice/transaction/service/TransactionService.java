@@ -20,8 +20,19 @@ public class TransactionService {
     }
 
     public Transaction createTransaction(Transaction transaction) {
-        mapper.insert(transaction);
-        return transaction;
+        try {
+            calculateFeesAndCommissions(transaction);
+            mapper.insert(transaction);
+            return transaction;
+        } catch (Exception e) {
+            throw TRANSACTION_COULD_NOT_BE_CREATED.asException();
+        }
+    }
+
+    private void calculateFeesAndCommissions(Transaction transaction) {
+        transaction.setFees(transaction.getSendingPrincipal() - transaction.getPayoutPrincipal());
+        transaction.setAgentCommission(transaction.getFees() * 0.2);
+        transaction.setCommission(transaction.getFees() - transaction.getAgentCommission());
     }
 
     public Integer updateTransaction(int id, Transaction transaction) {

@@ -2,6 +2,7 @@ package com.smallworldfs.transactiondataservice.transaction.api;
 
 import static com.smallworldfs.starter.servicetest.error.ErrorDtoResultMatcher.errorDto;
 import static com.smallworldfs.transactiondataservice.transaction.Transactions.newTransaction;
+import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_COULD_NOT_BE_CREATED;
 import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_COULD_NOT_BE_PAID;
 import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_NOT_FOUND;
 import static org.mockito.Mockito.when;
@@ -55,8 +56,8 @@ public class TransactionControllerTest {
                     .andExpect(jsonPath("$.sendingPrincipal", Matchers.equalTo(100.0)))
                     .andExpect(jsonPath("$.payoutPrincipal", Matchers.equalTo(98.0)))
                     .andExpect(jsonPath("$.fees", Matchers.equalTo(2.0)))
-                    .andExpect(jsonPath("$.commission", Matchers.equalTo(1.8)))
-                    .andExpect(jsonPath("$.agentCommission", Matchers.equalTo(0.2)))
+                    .andExpect(jsonPath("$.commission", Matchers.equalTo(1.6)))
+                    .andExpect(jsonPath("$.agentCommission", Matchers.equalTo(0.4)))
                     .andExpect(jsonPath("$.senderId", Matchers.equalTo(3)))
                     .andExpect(jsonPath("$.beneficiaryId", Matchers.equalTo(4)))
                     .andExpect(jsonPath("$.status", Matchers.equalTo("NEW")));
@@ -72,11 +73,21 @@ public class TransactionControllerTest {
                     .andExpect(jsonPath("$.sendingPrincipal", Matchers.equalTo(100.0)))
                     .andExpect(jsonPath("$.payoutPrincipal", Matchers.equalTo(98.0)))
                     .andExpect(jsonPath("$.fees", Matchers.equalTo(2.0)))
-                    .andExpect(jsonPath("$.commission", Matchers.equalTo(1.8)))
-                    .andExpect(jsonPath("$.agentCommission", Matchers.equalTo(0.2)))
+                    .andExpect(jsonPath("$.commission", Matchers.equalTo(1.6)))
+                    .andExpect(jsonPath("$.agentCommission", Matchers.equalTo(0.4)))
                     .andExpect(jsonPath("$.senderId", Matchers.equalTo(3)))
                     .andExpect(jsonPath("$.beneficiaryId", Matchers.equalTo(4)))
                     .andExpect(jsonPath("$.status", Matchers.equalTo("NEW")));
+        }
+
+        @Test
+        void returns_cannot_be_created_when_transaction_cannot_be_created() throws Exception {
+            Transaction newTransaction = newTransaction();
+            whenTransactionIsCreatedThenThrowCannotBeCreated(newTransaction);
+            createTransaction(newTransaction)
+                    .andExpect(errorDto()
+                            .hasMessage("Transaction could not be created")
+                            .hasCode("TRANSACTION_COULD_NOT_BE_CREATED"));
         }
 
         @Test
@@ -115,6 +126,11 @@ public class TransactionControllerTest {
             when(service.createTransaction(transaction)).thenReturn(transaction);
         }
 
+        private void whenTransactionIsCreatedThenThrowCannotBeCreated(Transaction transaction) {
+            Mockito.doThrow(TRANSACTION_COULD_NOT_BE_CREATED.asException())
+                            .when(service).createTransaction(transaction);
+        }
+
         private void whenTransactionIsUpdatedThenReturn(int id, Transaction transaction) {
             when(service.updateTransaction(id, transaction)).thenReturn(1);
         }
@@ -124,8 +140,8 @@ public class TransactionControllerTest {
         }
 
         private void whenTransactionIsPaidThenThrowCannotBePaid(int id) {
-            Mockito.doThrow(TRANSACTION_COULD_NOT_BE_PAID.withParameters(id).asException()).
-                    when(service).payoutTransaction(id);
+            Mockito.doThrow(TRANSACTION_COULD_NOT_BE_PAID.withParameters(id).asException())
+                            .when(service).payoutTransaction(id);
         }
 
         private ResultActions getTransaction(int id) throws Exception {

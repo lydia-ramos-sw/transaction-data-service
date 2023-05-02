@@ -1,5 +1,6 @@
 package com.smallworldfs.transactiondataservice.transaction.db.entity;
 
+import javax.validation.constraints.Max;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Transaction {
     private Integer transactionId;
+    @Max(3000)
     private Double sendingPrincipal;
     private Double payoutPrincipal;
     private Double fees;
