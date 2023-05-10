@@ -1,5 +1,6 @@
 package com.smallworldfs.transactiondataservice.transaction.db.mapper;
 
+import com.smallworldfs.transactiondataservice.transaction.db.entity.CustomerTransactionInfo;
 import com.smallworldfs.transactiondataservice.transaction.db.entity.Transaction;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
@@ -30,4 +31,6 @@ public interface TransactionMapper {
             + " status=#{transaction.status} "
             + " where id=#{transaction.transactionId}")
     Integer update(int id, Transaction transaction);
+
+    Optional<CustomerTransactionInfo> findTransactionByCustomerId(int customerId);
 }

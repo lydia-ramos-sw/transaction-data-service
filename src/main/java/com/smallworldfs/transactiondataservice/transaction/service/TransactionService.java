@@ -5,6 +5,7 @@ import static com.smallworldfs.transactiondataservice.transaction.error.Transact
 import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_COULD_NOT_BE_UPDATED;
 import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_NOT_FOUND;
 
+import com.smallworldfs.transactiondataservice.transaction.db.entity.CustomerTransactionInfo;
 import com.smallworldfs.transactiondataservice.transaction.db.entity.Transaction;
 import com.smallworldfs.transactiondataservice.transaction.db.mapper.TransactionMapper;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +46,10 @@ public class TransactionService {
 
     public void payoutTransaction(Integer id) {
         throw TRANSACTION_COULD_NOT_BE_PAID.withParameters(id).asException();
+    }
+
+    public CustomerTransactionInfo getCustomerTransactionInfo(Integer customerId) {
+        return mapper.findTransactionByCustomerId(customerId)
+                .orElseThrow(() -> TRANSACTION_NOT_FOUND.withParameters(customerId).asException());
     }
 }

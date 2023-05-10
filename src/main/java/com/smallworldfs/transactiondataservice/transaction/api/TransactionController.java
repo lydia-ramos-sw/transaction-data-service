@@ -1,5 +1,6 @@
 package com.smallworldfs.transactiondataservice.transaction.api;
 
+import com.smallworldfs.transactiondataservice.transaction.db.entity.CustomerTransactionInfo;
 import com.smallworldfs.transactiondataservice.transaction.db.entity.Transaction;
 import com.smallworldfs.transactiondataservice.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +42,11 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateTransaction(@PathVariable Integer id, @RequestBody Transaction transaction) {
         service.updateTransaction(id, transaction);
+    }
+
+    @PutMapping("/{customerId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public CustomerTransactionInfo getCustomerTransactionInfo(@PathVariable Integer customerId) {
+        return service.getCustomerTransactionInfo(customerId);
     }
 }
