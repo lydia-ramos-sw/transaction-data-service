@@ -1,12 +1,13 @@
 package com.smallworldfs.transactiondataservice.transaction.db.entity;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
 
 @Data
 @Builder
@@ -31,4 +32,6 @@ public class Transaction {
     @NotNull
     // TODO: 10/05/2023  Review if there is @MaxLength for VARCHAR(10)
     private TransactionStatus status;
+    @NotNull
+    private Timestamp creationDate;
 }

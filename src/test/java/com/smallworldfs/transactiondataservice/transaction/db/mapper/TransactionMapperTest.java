@@ -51,5 +51,11 @@ public class TransactionMapperTest {
             Assertions.assertThat(result.intValue()).isEqualTo(1);
 
         }
+
+        /*@Test
+        void return_empty_when_transaction_does_not_exist() {
+            Optional<Transaction> transaction = mapper.findById(55);
+            assertThat(transaction).isEmpty();
+        }*/
     }
 }

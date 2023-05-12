@@ -3,12 +3,16 @@ package com.smallworldfs.transactiondataservice.transaction.service;
 import static com.smallworldfs.error.issue.DefaultIssueType.INTERNAL_ERROR;
 import static com.smallworldfs.error.issue.DefaultIssueType.NOT_FOUND;
 import static com.smallworldfs.error.issue.DefaultIssueType.REQUEST_ERROR;
+import static com.smallworldfs.transactiondataservice.transaction.CustomerTransactionsInfo.newCustomerTransactionInfo;
 import static com.smallworldfs.transactiondataservice.transaction.Transactions.newTransaction;
+import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.CUSTOMER_INFO_ERROR;
 import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_COULD_NOT_BE_CREATED;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.smallworldfs.error.exception.ApplicationException;
+import com.smallworldfs.transactiondataservice.transaction.CustomerTransactionsInfo;
+import com.smallworldfs.transactiondataservice.transaction.db.entity.CustomerTransactionInfo;
 import com.smallworldfs.transactiondataservice.transaction.db.entity.Transaction;
 import com.smallworldfs.transactiondataservice.transaction.db.mapper.TransactionMapper;
 import java.util.Optional;
@@ -52,6 +56,10 @@ public class TransactionServiceTest {
 
             Assertions.assertThat(transaction).isEqualTo(newTransaction());
         }
+    }
+
+    @Nested
+    class CreateTransaction {
 
         @Test
         void throws_exception_when_transaction_cannot_be_created() {
@@ -59,8 +67,8 @@ public class TransactionServiceTest {
             newTransaction.setSendingPrincipal(3700.0);
             whenTransactionIsCreatedThenReturnException(newTransaction);
 
-            ApplicationException exception = assertThrows(ApplicationException.class, () ->
-                    service.createTransaction(newTransaction));
+            ApplicationException exception =
+                    assertThrows(ApplicationException.class, () -> service.createTransaction(newTransaction));
 
             Assertions.assertThat(exception)
                     .hasMessage("Transaction could not be created")
@@ -78,6 +86,10 @@ public class TransactionServiceTest {
 
             Assertions.assertThat(expectedTransaction).isEqualTo(newTransaction);
         }
+    }
+
+    @Nested
+    class UpdateTransaction {
 
         @Test
         void throws_exception_when_transaction_cannot_be_updated() {
@@ -102,31 +114,65 @@ public class TransactionServiceTest {
             Assertions.assertThat(result.intValue()).isEqualTo(1);
         }
 
-        private void whenTransactionIsQueriedReturnEmpty(int id) {
-            when(mapper.findById(id)).thenReturn(Optional.empty());
+    }
+
+    @Nested
+    class GetCustomerTransactionInfo {
+
+        @Test
+        void throws_exception_when_customer_info_cannot_recover() {
+            whenCustomerTransactionInfoIsQueriedThrowException(55);
+
+            ApplicationException exception = assertThrows(ApplicationException.class, () -> service.getCustomerTransactionInfo(55));
+
+            Assertions.assertThat(exception)
+                    .hasMessage("Problems when trying to recover info for customer with id '55'")
+                    .returns(NOT_FOUND, e -> e.getIssue().getType());
         }
 
-        private void whenTransactionIsQueriedThenReturn(int id, Transaction transaction) {
-            when(mapper.findById(id)).thenReturn(Optional.ofNullable(transaction));
-        }
+        @Test
+        void returns_customer_transaction_info_when_it_is_available() {
+            whenCustomerTransactionInfoIsQueriedThenReturnCustomerTransactionInfo(1);
 
-        private void whenTransactionIsCreatedThenReturnTransaction(Transaction transaction) {
-            Mockito.doAnswer((t) -> {
-                transaction.setTransactionId(2);
-                return transaction;
-            }).when(mapper).insert(transaction);
-        }
+            CustomerTransactionInfo cti = service.getCustomerTransactionInfo(1);
 
-        private void whenTransactionIsCreatedThenReturnException(Transaction transaction) {
-            Mockito.doThrow(TRANSACTION_COULD_NOT_BE_CREATED.asException()).when(mapper).insert(transaction);
+            Assertions.assertThat(cti).isEqualTo(newCustomerTransactionInfo());
         }
+    }
 
-        private void whenTransactionIsUpdatedThenReturnZero(int id, Transaction transaction) {
-            when(mapper.update(id, transaction)).thenReturn(0);
-        }
+    private void whenTransactionIsQueriedReturnEmpty(int id) {
+        when(mapper.findById(id)).thenReturn(Optional.empty());
+    }
 
-        private void whenTransactionIsUpdatedThenReturn(int id, Transaction transaction) {
-            when(mapper.update(id, transaction)).thenReturn(1);
-        }
+    private void whenTransactionIsQueriedThenReturn(int id, Transaction transaction) {
+        when(mapper.findById(id)).thenReturn(Optional.ofNullable(transaction));
+    }
+
+    private void whenTransactionIsCreatedThenReturnTransaction(Transaction transaction) {
+        Mockito.doAnswer((t) -> {
+            transaction.setTransactionId(2);
+            return transaction;
+        }).when(mapper).insert(transaction);
+    }
+
+    private void whenTransactionIsCreatedThenReturnException(Transaction transaction) {
+        Mockito.doThrow(TRANSACTION_COULD_NOT_BE_CREATED.asException()).when(mapper).insert(transaction);
+    }
+
+    private void whenTransactionIsUpdatedThenReturnZero(int id, Transaction transaction) {
+        when(mapper.update(id, transaction)).thenReturn(0);
+    }
+
+    private void whenTransactionIsUpdatedThenReturn(int id, Transaction transaction) {
+        when(mapper.update(id, transaction)).thenReturn(1);
+    }
+
+    private void whenCustomerTransactionInfoIsQueriedThrowException(int customerId) {
+        Mockito.doThrow(CUSTOMER_INFO_ERROR.asException()).when(mapper).findTotalAmountSentByCustomerId(customerId);
+    }
+
+    private void whenCustomerTransactionInfoIsQueriedThenReturnCustomerTransactionInfo(int customerId) {
+        when(mapper.findTransactionsInProgressByCustomerId(customerId)).thenReturn(1);
+        when(mapper.findTotalAmountSentByCustomerId(customerId)).thenReturn(100.0);
     }
 }

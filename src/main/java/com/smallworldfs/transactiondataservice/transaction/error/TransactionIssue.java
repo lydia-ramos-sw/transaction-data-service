@@ -17,7 +17,9 @@ public enum TransactionIssue implements Issue {
     TRANSACTION_COULD_NOT_BE_UPDATED("Transaction with id '{0}' could not be updated",
             DefaultIssueType.INTERNAL_ERROR),
     TRANSACTION_COULD_NOT_BE_PAID("Transaction with id '{0}' could not be paid",
-            DefaultIssueType.INTERNAL_ERROR);
+            DefaultIssueType.INTERNAL_ERROR),
+    CUSTOMER_INFO_ERROR("Problems when trying to recover info for customer with id '{0}'",
+            DefaultIssueType.NOT_FOUND);
 
     private final String messageTemplate;
     private final IssueType type;

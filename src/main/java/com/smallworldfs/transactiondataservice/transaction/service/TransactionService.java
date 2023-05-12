@@ -1,5 +1,6 @@
 package com.smallworldfs.transactiondataservice.transaction.service;
 
+import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.CUSTOMER_INFO_ERROR;
 import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_COULD_NOT_BE_CREATED;
 import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_COULD_NOT_BE_PAID;
 import static com.smallworldfs.transactiondataservice.transaction.error.TransactionIssue.TRANSACTION_COULD_NOT_BE_UPDATED;
@@ -49,7 +50,14 @@ public class TransactionService {
     }
 
     public CustomerTransactionInfo getCustomerTransactionInfo(Integer customerId) {
-        return mapper.findTransactionByCustomerId(customerId)
-                .orElseThrow(() -> TRANSACTION_NOT_FOUND.withParameters(customerId).asException());
+        CustomerTransactionInfo cti = new CustomerTransactionInfo();
+        try {
+            cti.setNumberOfTxnInProgress(mapper.findTransactionsInProgressByCustomerId(customerId));
+            cti.setAggregatedAmountSentInPeriod(mapper.findTotalAmountSentByCustomerId(customerId));
+        } catch (Exception e) {
+            throw CUSTOMER_INFO_ERROR.withParameters(customerId).asException();
+        }
+
+        return cti;
     }
 }

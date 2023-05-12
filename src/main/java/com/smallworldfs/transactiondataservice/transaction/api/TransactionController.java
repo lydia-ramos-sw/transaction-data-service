@@ -44,8 +44,8 @@ public class TransactionController {
         service.updateTransaction(id, transaction);
     }
 
-    @PutMapping("/{customerId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("/{customerId}")
+    @ResponseStatus(HttpStatus.FOUND)
     public CustomerTransactionInfo getCustomerTransactionInfo(@PathVariable Integer customerId) {
         return service.getCustomerTransactionInfo(customerId);
     }

@@ -44,29 +44,18 @@
                 #{beneficiaryId}, #{status});
     </insert>
 
-    <resultMap type="com.smallworldfs.transactiondataservice.transaction.db.entity.CustomerTransactionInfo" id="customerTransactionInfo">
-        <id column="id" property="transactionId"/>
-        <result column="sending_principal" property="sendingPrincipal"/>
-        <result column="payout_principal" property="payoutPrincipal"/>
-        <result column="fees" property="fees"/>
-        <result column="commission" property="commission"/>
-        <result column="agent_commission" property="agentCommission"/>
-        <result column="sender_id" property="senderId"/>
-        <result column="beneficiary_id" property="beneficiaryId"/>
-        <result column="status" property="status"/>
-    </resultMap>
 
-    <select id="findById" resultMap="transaction">
-        SELECT id,
-               sending_principal,
-               payout_principal,
-               fees,
-               commission,
-               agent_commission,
-               sender_id,
-               beneficiary_id,
-               status
+    <select id="findTransactionsInProgressByCustomerId">
+        SELECT count (*)
         FROM transaction.transaction
-        where id = #{id}
+        where (sender_id = #{customerId}
+           or beneficiary_id = #{customerId})
+            and status = 'IN_PROGRESS';
+    </select>
+
+    <select id="findTotalAmountSentByCustomerId">
+        SELECT sum (sendingPrincipal)
+        FROM transaction.transaction
+        where sender_id = #{customerId};
     </select>
 </mapper>
