@@ -54,7 +54,7 @@
     </select>
 
     <select id="findTotalAmountSentByCustomerId">
-        SELECT sum (sendingPrincipal)
+        SELECT sum (sending_principal)
         FROM transaction.transaction
         where sender_id = #{customerId};
     </select>
