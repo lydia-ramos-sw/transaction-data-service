@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 class TransactionDataServiceApplicationTests {
 
     @Test
-    void contextLoads() {
-    }
+    void contextLoads() {}
 
 }

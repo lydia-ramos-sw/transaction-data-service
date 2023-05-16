@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.smallworldfs.error.exception.ApplicationException;
-import com.smallworldfs.transactiondataservice.transaction.CustomerTransactionsInfo;
 import com.smallworldfs.transactiondataservice.transaction.db.entity.CustomerTransactionInfo;
 import com.smallworldfs.transactiondataservice.transaction.db.entity.Transaction;
 import com.smallworldfs.transactiondataservice.transaction.db.mapper.TransactionMapper;
@@ -123,7 +122,8 @@ public class TransactionServiceTest {
         void throws_exception_when_customer_info_cannot_recover() {
             whenCustomerTransactionInfoIsQueriedThrowException(55);
 
-            ApplicationException exception = assertThrows(ApplicationException.class, () -> service.getCustomerTransactionInfo(55));
+            ApplicationException exception = assertThrows(ApplicationException.class,
+                    () -> service.getCustomerTransactionInfo(55));
 
             Assertions.assertThat(exception)
                     .hasMessage("Problems when trying to recover info for customer with id '55'")

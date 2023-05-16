@@ -1,19 +1,18 @@
 package com.smallworldfs.transactiondataservice.transaction.db.entity;
 
+import java.sql.Timestamp;
 import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Transaction {
+
     private Integer transactionId;
     @NotNull
     private Double sendingPrincipal;
@@ -30,7 +29,7 @@ public class Transaction {
     @NotNull
     private Integer beneficiaryId;
     @NotNull
-    // TODO: 10/05/2023  Review if there is @MaxLength for VARCHAR(10)
+    // TODO: 10/05/2023 Review if there is @MaxLength for VARCHAR(10)
     private TransactionStatus status;
     @NotNull
     private Timestamp creationDate;

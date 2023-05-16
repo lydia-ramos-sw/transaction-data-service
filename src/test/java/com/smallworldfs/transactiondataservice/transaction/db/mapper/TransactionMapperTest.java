@@ -20,7 +20,8 @@ public class TransactionMapperTest {
     private TransactionMapper mapper;
 
     @Nested
-    class FindById{
+    class FindById {
+
         @Test
         void return_empty_when_transaction_does_not_exist() {
             Optional<Transaction> transaction = mapper.findById(55);
@@ -33,13 +34,13 @@ public class TransactionMapperTest {
             assertThat(transaction)
                     .isPresent()
                     .hasValue(newTransaction());
-
         }
     }
 
 
     @Nested
-    class Insert{
+    class Insert {
+
         @Test
         void returns_transaction_data_when_transaction_create() {
             Transaction newTransaction = newTransactionNoId();
@@ -50,7 +51,8 @@ public class TransactionMapperTest {
     }
 
     @Nested
-    class Update{
+    class Update {
+
         @Test
         void returns_transaction_data_when_transaction_update() {
             Transaction newTransaction = newTransaction();
@@ -60,7 +62,8 @@ public class TransactionMapperTest {
     }
 
     @Nested
-    class findComplianceData{
+    class FindComplianceData {
+
         @Test
         void return_zero_when_search_txn_in_progress_for_customerId_55() {
             Integer result = mapper.findTransactionsInProgressByCustomerId(55);

@@ -134,7 +134,7 @@ public class TransactionControllerTest {
     class GetCustomerTransactionInfo {
 
         @Test
-        void returns_exception_when_customer_info_search_has_problems() throws Exception {
+        void returns_exception_when_customerInfo_search_has_problems() throws Exception {
             whenCustomerTransactionInfoIsQueriedThenThrowNotFound(77);
 
             getCustomerTransactionInfo(77).andExpect(status().isNotFound())
@@ -145,7 +145,8 @@ public class TransactionControllerTest {
 
         @Test
         void returns_customer_transaction_info_when_info_exists() throws Exception {
-            whenCustomerTransactionInfoIsQueriedThenReturnCustomerTransactionInfo(1, newCustomerTransactionInfo());
+            whenCustomerTransactionInfoIsQueriedThenReturnCustomerTransactionInfo(1,
+                    newCustomerTransactionInfo());
 
             getCustomerTransactionInfo(1)
                     .andExpect(jsonPath("$.numberOfTxnInProgress", Matchers.equalTo(1)))
@@ -191,7 +192,9 @@ public class TransactionControllerTest {
         when(service.getCustomerTransactionInfo(id)).thenThrow(CUSTOMER_INFO_ERROR.withParameters(id).asException());
     }
 
-    private void whenCustomerTransactionInfoIsQueriedThenReturnCustomerTransactionInfo(int customerId, CustomerTransactionInfo customerTransactionInfo) {
+    private void whenCustomerTransactionInfoIsQueriedThenReturnCustomerTransactionInfo(
+            int customerId,
+            CustomerTransactionInfo customerTransactionInfo) {
         when(service.getCustomerTransactionInfo(customerId)).thenReturn(customerTransactionInfo);
     }
 

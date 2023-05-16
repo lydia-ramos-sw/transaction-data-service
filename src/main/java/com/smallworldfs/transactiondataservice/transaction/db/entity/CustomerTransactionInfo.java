@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerTransactionInfo{
+public class CustomerTransactionInfo {
+
     private Integer numberOfTxnInProgress;
     private Double aggregatedAmountSentInPeriod;
 }
